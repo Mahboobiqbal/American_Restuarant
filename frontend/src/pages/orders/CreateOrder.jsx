@@ -46,7 +46,8 @@ const CreateOrder = () => {
 
   const filteredMenuItems = menuItems.filter((item) => {
     const matchesSearch = item.name.toLowerCase().includes(menuSearch.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || item.category === activeCategory;
+    const catName = item.category?.name || item.category || '';
+    const matchesCategory = activeCategory === 'all' || catName === activeCategory;
     return matchesSearch && matchesCategory;
   });
 

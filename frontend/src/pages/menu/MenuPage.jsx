@@ -49,7 +49,8 @@ const MenuPage = () => {
 
   const filteredItems = items.filter((item) => {
     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+    const catName = item.category?.name || item.category || '';
+    const matchesCategory = selectedCategory === 'all' || catName === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -65,7 +66,7 @@ const MenuPage = () => {
       name: item.name,
       description: item.description,
       price: item.price,
-      category: item.category,
+      category: item.category?._id || item.category,
       image: item.image || '',
       isAvailable: item.isAvailable
     });
@@ -187,7 +188,7 @@ const MenuPage = () => {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">{item.category}</span>
+                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">{item.category?.name || item.category}</span>
                     </td>
                     <td className="px-4 py-3 font-medium text-gray-900">${item.price.toFixed(2)}</td>
                     <td className="px-4 py-3">
