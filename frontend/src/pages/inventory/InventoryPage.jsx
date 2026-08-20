@@ -111,7 +111,7 @@ const InventoryPage = () => {
 
   const filteredItems = items.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.supplier?.toLowerCase().includes(searchTerm.toLowerCase());
+      (item.supplier?.name || item.supplier || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !categoryFilter || item.category === categoryFilter;
     const matchesLowStock = !lowStockFilter || isLowStock(item);
     return matchesSearch && matchesCategory && matchesLowStock;
@@ -220,7 +220,7 @@ const InventoryPage = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.minQuantity} {item.unit}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(item.costPerUnit)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.supplier || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.supplier?.name || item.supplier || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(item.lastRestocked)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <div className="flex items-center gap-2">
