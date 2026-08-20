@@ -90,8 +90,8 @@ export default function DashboardLayout() {
             <UtensilsCrossed className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-surface-900">Restaurant Atiq</h1>
-            <p className="text-[10px] text-surface-400 uppercase tracking-wider">Management System</p>
+            <h1 className="text-sm font-bold text-surface-900">Kennedy Fried Chicken</h1>
+            <p className="text-[10px] text-surface-400 uppercase tracking-wider">Point of Sale System</p>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden ml-auto p-1">
             <X className="w-5 h-5 text-surface-400" />

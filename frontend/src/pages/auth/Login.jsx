@@ -27,8 +27,8 @@ export default function Login() {
           <div className="w-14 h-14 bg-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <UtensilsCrossed className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-surface-900">Restaurant Atiq</h1>
-          <p className="text-sm text-surface-500 mt-1">Management System</p>
+          <h1 className="text-2xl font-bold text-surface-900">Kennedy Fried Chicken</h1>
+          <p className="text-sm text-surface-500 mt-1">Point of Sale System</p>
         </div>
 
         <div className="card p-6">
