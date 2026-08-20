@@ -4,7 +4,7 @@ import { ArrowLeft, Search, Plus, Minus, Trash2, ShoppingBag, User, Phone, Messa
 import toast from 'react-hot-toast';
 import { menuAPI, orderAPI, categoryAPI } from '../../services/api';
 
-const TAX_RATE = 0.08;
+const TAX_RATE = 0.08875;
 const SERVICE_CHARGE_RATE = 0.05;
 
 const CreateOrder = () => {
@@ -31,12 +31,14 @@ const CreateOrder = () => {
 
   const fetchData = async () => {
     try {
-      const [menuData, catData] = await Promise.all([
+      const [menuRes, catRes] = await Promise.all([
         menuAPI.getAll(),
         categoryAPI.getAll()
       ]);
-      setMenuItems(menuData.filter((item) => item.isAvailable));
-      setCategories(catData);
+      const menuArr = menuRes.data?.items || menuRes.data || [];
+      const catArr = catRes.data || [];
+      setMenuItems(menuArr.filter((item) => item.isAvailable));
+      setCategories(Array.isArray(catArr) ? catArr : []);
     } catch (error) {
       toast.error('Failed to load data');
     } finally {
@@ -252,7 +254,7 @@ const CreateOrder = () => {
                   className="text-left p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors"
                 >
                   <div className="font-medium text-gray-900 text-sm">{item.name}</div>
-                  <div className="text-blue-600 font-semibold text-sm mt-1">Rs.{item.price.toFixed(2)}</div>
+                  <div className="text-blue-600 font-semibold text-sm mt-1">${item.price.toFixed(2)}</div>
                 </button>
               ))}
             </div>
@@ -292,7 +294,7 @@ const CreateOrder = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="font-medium text-gray-900 text-sm">{item.name}</div>
-                          <div className="text-blue-600 text-sm">Rs.{item.price.toFixed(2)}</div>
+                          <div className="text-blue-600 text-sm">${item.price.toFixed(2)}</div>
                         </div>
                         <button
                           onClick={() => removeFromCart(item._id)}
@@ -330,19 +332,19 @@ const CreateOrder = () => {
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Subtotal</span>
-                    <span>Rs.{subtotal.toFixed(2)}</span>
+                    <span>${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Tax ({(TAX_RATE * 100).toFixed(0)}%)</span>
-                    <span>Rs.{tax.toFixed(2)}</span>
+                    <span>${tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Service ({(SERVICE_CHARGE_RATE * 100).toFixed(0)}%)</span>
-                    <span>Rs.{serviceCharge.toFixed(2)}</span>
+                    <span>${serviceCharge.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold text-gray-900 border-t border-gray-200 pt-2">
                     <span>Total</span>
-                    <span>Rs.{total.toFixed(2)}</span>
+                    <span>${total.toFixed(2)}</span>
                   </div>
                 </div>
 

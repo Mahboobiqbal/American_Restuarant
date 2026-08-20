@@ -151,7 +151,7 @@ const OrdersPage = () => {
                     </td>
                     <td className="px-4 py-3 text-gray-600">{order.customerName || '-'}</td>
                     <td className="px-4 py-3 text-gray-600">{order.items?.length || 0}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900">Rs.{order.total?.toFixed(0)}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900">${order.total?.toFixed(2)}</td>
                     <td className="px-4 py-3">
                       <span className={getStatusBadge(order.status)}>{order.status}</span>
                     </td>
