@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { settingsAPI } from '../../services/api';
 import toast from 'react-hot-toast';
-import { Save, Store, Clock, FileText, AlertTriangle, Loader2 } from 'lucide-react';
+import { Save, Store, Clock, FileText, AlertTriangle, Loader2, DollarSign } from 'lucide-react';
 
 const SettingsPage = () => {
   const [loading, setLoading] = useState(true);
