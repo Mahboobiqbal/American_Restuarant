@@ -50,7 +50,7 @@ exports.getOrder = async (req, res) => {
 
 exports.createOrder = async (req, res) => {
   try {
-    const { type, table, customerName, customerPhone, customerAddress, items, notes, priority, discount, discountType } = req.body;
+    const { type, table, customerName, customerPhone, customerAddress, items, notes, priority, discount, discountType, paymentMethod, paymentStatus } = req.body;
 
     let subtotal = 0;
     const processedItems = items.map(item => {
@@ -77,6 +77,9 @@ exports.createOrder = async (req, res) => {
       total, customerName, customerPhone, customerAddress,
       notes, priority: priority || 'normal',
       createdBy: req.user._id,
+      paymentMethod: paymentMethod || '',
+      paymentStatus: paymentStatus || 'unpaid',
+      paymentDate: paymentStatus === 'paid' ? new Date() : undefined,
     };
 
     if (table) orderData.table = table;
@@ -127,7 +130,7 @@ exports.createOrder = async (req, res) => {
     const managers = await require('../models/User').find({ role: 'manager', isActive: true });
     const managerNotifs = managers.map(u => ({
       user: u._id, type: 'order', title: 'New Order',
-      message: `Order ${order.orderNumber} created - Total: Rs.${total.toFixed(2)}`,
+      message: `Order ${order.orderNumber} created - Total: $${total.toFixed(2)}`,
       relatedId: order._id, relatedModel: 'Order',
     }));
     if (managerNotifs.length) await Notification.insertMany(managerNotifs);

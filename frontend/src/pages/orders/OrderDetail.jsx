@@ -305,7 +305,7 @@ const OrderDetail = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {['cash', 'card', 'upi', 'online'].map((method) => (
+                  {['cash', 'card'].map((method) => (
                     <button
                       key={method}
                       onClick={() => setPaymentMethod(method)}

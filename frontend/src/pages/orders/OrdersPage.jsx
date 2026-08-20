@@ -156,7 +156,12 @@ const OrdersPage = () => {
                       <span className={getStatusBadge(order.status)}>{order.status}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={getPaymentBadge(order.paymentStatus)}>{order.paymentStatus}</span>
+                      <div className="flex flex-col gap-1">
+                        <span className={getPaymentBadge(order.paymentStatus)}>{order.paymentStatus}</span>
+                        {order.paymentMethod && (
+                          <span className="text-xs text-gray-500">{order.paymentMethod === 'cash' ? '💵 Cash' : '💳 Card'}</span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500">
                       {new Date(order.createdAt).toLocaleTimeString()}

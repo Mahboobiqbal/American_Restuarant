@@ -20,6 +20,7 @@ const CreateOrder = () => {
   const [customerAddress, setCustomerAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [priority, setPriority] = useState('normal');
+  const [paymentMethod, setPaymentMethod] = useState('cash');
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [menuSearch, setMenuSearch] = useState('');
@@ -108,7 +109,9 @@ const CreateOrder = () => {
         serviceCharge,
         total,
         notes,
-        priority
+        priority,
+        paymentMethod,
+        paymentStatus: paymentMethod ? 'paid' : 'unpaid'
       };
       await orderAPI.create(orderData);
       toast.success('Order created successfully');
@@ -215,6 +218,25 @@ const CreateOrder = () => {
                   <option value="high">High</option>
                   <option value="rush">Rush</option>
                 </select>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="label">Payment Method</label>
+                <div className="flex gap-2">
+                  {['cash', 'card'].map((method) => (
+                    <button
+                      key={method}
+                      type="button"
+                      onClick={() => setPaymentMethod(method)}
+                      className={`flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-colors ${
+                        paymentMethod === method
+                          ? 'bg-green-600 text-white border-green-600'
+                          : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      {method === 'cash' ? '💵 Cash' : '💳 Card'}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
