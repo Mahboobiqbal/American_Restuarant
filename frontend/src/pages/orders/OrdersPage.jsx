@@ -34,7 +34,7 @@ const OrdersPage = () => {
       order.orderNumber?.toLowerCase().includes(search.toLowerCase()) ||
       order.customerName?.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    const matchesType = typeFilter === 'all' || order.orderType === typeFilter;
+    const matchesType = typeFilter === 'all' || order.type === typeFilter;
     return matchesSearch && matchesStatus && matchesType;
   });
 
@@ -54,7 +54,6 @@ const OrdersPage = () => {
 
   const getTypeBadge = (type) => {
     const colors = {
-      'dine-in': 'bg-blue-100 text-blue-700',
       takeaway: 'bg-purple-100 text-purple-700',
       delivery: 'bg-orange-100 text-orange-700'
     };
@@ -69,7 +68,7 @@ const OrdersPage = () => {
           <p className="text-gray-500 mt-1">{orders.length} total orders</p>
         </div>
         <Link
-          to="/orders/create"
+          to="/orders/new"
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus size={20} />
@@ -112,7 +111,6 @@ const OrdersPage = () => {
                 className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all">All Types</option>
-                <option value="dine-in">Dine-In</option>
                 <option value="takeaway">Takeaway</option>
                 <option value="delivery">Delivery</option>
               </select>
@@ -126,7 +124,7 @@ const OrdersPage = () => {
               <tr>
                 <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Order #</th>
                 <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Type</th>
-                <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Table</th>
+                <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Customer</th>
                 <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Items</th>
                 <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Total</th>
                 <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Status</th>
@@ -149,11 +147,11 @@ const OrdersPage = () => {
                   <tr key={order._id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 font-medium text-gray-900">{order.orderNumber}</td>
                     <td className="px-4 py-3">
-                      <span className={getTypeBadge(order.orderType)}>{order.orderType}</span>
+                      <span className={getTypeBadge(order.type)}>{order.type}</span>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{order.tableNumber || '-'}</td>
+                    <td className="px-4 py-3 text-gray-600">{order.customerName || '-'}</td>
                     <td className="px-4 py-3 text-gray-600">{order.items?.length || 0}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900">${order.total?.toFixed(2)}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900">Rs.{order.total?.toFixed(0)}</td>
                     <td className="px-4 py-3">
                       <span className={getStatusBadge(order.status)}>{order.status}</span>
                     </td>

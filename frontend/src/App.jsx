@@ -7,12 +7,10 @@ import MenuPage from './pages/menu/MenuPage';
 import OrdersPage from './pages/orders/OrdersPage';
 import CreateOrder from './pages/orders/CreateOrder';
 import OrderDetail from './pages/orders/OrderDetail';
-import TablesPage from './pages/tables/TablesPage';
 import KitchenDisplay from './pages/kitchen/KitchenDisplay';
 import InventoryPage from './pages/inventory/InventoryPage';
 import SuppliersPage from './pages/suppliers/SuppliersPage';
 import CustomersPage from './pages/customers/CustomersPage';
-import ReservationsPage from './pages/reservations/ReservationsPage';
 import ReportsPage from './pages/reports/ReportsPage';
 import SettingsPage from './pages/settings/SettingsPage';
 import UsersPage from './pages/users/UsersPage';
@@ -40,7 +38,6 @@ export default function App() {
         <Route path="orders" element={<OrdersPage />} />
         <Route path="orders/new" element={<CreateOrder />} />
         <Route path="orders/:id" element={<OrderDetail />} />
-        <Route path="tables" element={<TablesPage />} />
         <Route path="kitchen" element={<KitchenDisplay />} />
         <Route path="inventory" element={
           <ProtectedRoute roles={['admin', 'manager']}><InventoryPage /></ProtectedRoute>
@@ -49,7 +46,6 @@ export default function App() {
           <ProtectedRoute roles={['admin', 'manager']}><SuppliersPage /></ProtectedRoute>
         } />
         <Route path="customers" element={<CustomersPage />} />
-        <Route path="reservations" element={<ReservationsPage />} />
         <Route path="reports" element={
           <ProtectedRoute roles={['admin', 'manager']}><ReportsPage /></ProtectedRoute>
         } />

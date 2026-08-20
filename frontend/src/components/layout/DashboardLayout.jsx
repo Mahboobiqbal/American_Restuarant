@@ -5,8 +5,8 @@ import { logout } from '../../features/authSlice';
 import { notificationAPI } from '../../services/api';
 import { connectSocket, disconnectSocket } from '../../utils/socket';
 import {
-  LayoutDashboard, UtensilsCrossed, ShoppingCart, Grid3X3, ChefHat,
-  Package, Truck, Users, Calendar, BarChart3, Settings, LogOut,
+  LayoutDashboard, UtensilsCrossed, ShoppingCart, ChefHat,
+  Package, Truck, Users, BarChart3, Settings, LogOut,
   Bell, Menu, X, ClipboardList, UserCircle
 } from 'lucide-react';
 
@@ -15,8 +15,6 @@ const allNavItems = [
   { path: '/orders', label: 'Orders', icon: ShoppingCart, roles: ['admin', 'manager', 'staff'] },
   { path: '/kitchen', label: 'Kitchen', icon: ChefHat, roles: ['admin', 'manager', 'kitchen'] },
   { path: '/menu', label: 'Menu', icon: UtensilsCrossed, roles: ['admin', 'manager', 'staff'] },
-  { path: '/tables', label: 'Tables', icon: Grid3X3, roles: ['admin', 'manager', 'staff'] },
-  { path: '/reservations', label: 'Reservations', icon: Calendar, roles: ['admin', 'manager', 'staff'] },
   { path: '/inventory', label: 'Inventory', icon: Package, roles: ['admin', 'manager'] },
   { path: '/suppliers', label: 'Suppliers', icon: Truck, roles: ['admin', 'manager'] },
   { path: '/customers', label: 'Customers', icon: Users, roles: ['admin', 'manager', 'staff'] },

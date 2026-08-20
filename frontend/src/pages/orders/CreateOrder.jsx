@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { ArrowLeft, Search, Plus, Minus, Trash2, ShoppingBag, User, Phone, MessageSquare, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Search, Plus, Minus, Trash2, ShoppingBag, User, Phone, MessageSquare, MapPin } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { menuAPI, tableAPI, orderAPI, categoryAPI } from '../../services/api';
+import { menuAPI, orderAPI, categoryAPI } from '../../services/api';
 
 const TAX_RATE = 0.08;
 const SERVICE_CHARGE_RATE = 0.05;
@@ -11,15 +10,14 @@ const SERVICE_CHARGE_RATE = 0.05;
 const CreateOrder = () => {
   const navigate = useNavigate();
   const [menuItems, setMenuItems] = useState([]);
-  const [tables, setTables] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  const [orderType, setOrderType] = useState('dine-in');
-  const [selectedTable, setSelectedTable] = useState('');
+  const [orderType, setOrderType] = useState('takeaway');
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [priority, setPriority] = useState('normal');
   const [cart, setCart] = useState([]);
@@ -33,13 +31,11 @@ const CreateOrder = () => {
 
   const fetchData = async () => {
     try {
-      const [menuData, tableData, catData] = await Promise.all([
+      const [menuData, catData] = await Promise.all([
         menuAPI.getAll(),
-        tableAPI.getAll(),
         categoryAPI.getAll()
       ]);
       setMenuItems(menuData.filter((item) => item.isAvailable));
-      setTables(tableData.filter((table) => table.status === 'available'));
       setCategories(catData);
     } catch (error) {
       toast.error('Failed to load data');
@@ -89,18 +85,14 @@ const CreateOrder = () => {
       toast.error('Please add items to the cart');
       return;
     }
-    if (orderType === 'dine-in' && !selectedTable) {
-      toast.error('Please select a table');
-      return;
-    }
 
     try {
       setSubmitting(true);
       const orderData = {
-        orderType,
-        tableNumber: orderType === 'dine-in' ? selectedTable : undefined,
+        type: orderType,
         customerName,
         customerPhone,
+        customerAddress: orderType === 'delivery' ? customerAddress : undefined,
         items: cart.map((item) => ({
           menuItem: item._id,
           name: item.name,
@@ -128,7 +120,7 @@ const CreateOrder = () => {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-[60vh]">
-        <p className="text-gray-500">Loading...</p>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -143,20 +135,20 @@ const CreateOrder = () => {
           <ArrowLeft size={20} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Create Order</h1>
-          <p className="text-gray-500 mt-1">Place a new order</p>
+          <h1 className="page-title">Create Order</h1>
+          <p className="page-subtitle">Place a new takeaway or delivery order</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <div className="card">
             <h2 className="text-lg font-semibold mb-3">Order Details</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Order Type</label>
+                <label className="label">Order Type</label>
                 <div className="flex gap-2">
-                  {['dine-in', 'takeaway', 'delivery'].map((type) => (
+                  {['takeaway', 'delivery'].map((type) => (
                     <button
                       key={type}
                       onClick={() => setOrderType(type)}
@@ -171,25 +163,8 @@ const CreateOrder = () => {
                   ))}
                 </div>
               </div>
-              {orderType === 'dine-in' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Table</label>
-                  <select
-                    value={selectedTable}
-                    onChange={(e) => setSelectedTable(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select table</option>
-                    {tables.map((table) => (
-                      <option key={table._id} value={table.number}>
-                        Table {table.number} ({table.capacity} seats)
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="label">
                   <span className="flex items-center gap-1"><User size={14} /> Customer Name</span>
                 </label>
                 <input
@@ -197,11 +172,11 @@ const CreateOrder = () => {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="Enter customer name"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="input-field"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="label">
                   <span className="flex items-center gap-1"><Phone size={14} /> Customer Phone</span>
                 </label>
                 <input
@@ -209,25 +184,39 @@ const CreateOrder = () => {
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="Enter phone number"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="input-field"
                 />
               </div>
+              {orderType === 'delivery' && (
+                <div>
+                  <label className="label">
+                    <span className="flex items-center gap-1"><MapPin size={14} /> Delivery Address</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={customerAddress}
+                    onChange={(e) => setCustomerAddress(e.target.value)}
+                    placeholder="Enter delivery address"
+                    className="input-field"
+                  />
+                </div>
+              )}
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                <label className="label">Priority</label>
                 <select
                   value={priority}
                   onChange={(e) => setPriority(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="input-field"
                 >
                   <option value="normal">Normal</option>
                   <option value="high">High</option>
-                  <option value="urgent">Urgent</option>
+                  <option value="rush">Rush</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+          <div className="card">
             <h2 className="text-lg font-semibold mb-3">Menu Items</h2>
             <div className="flex flex-col sm:flex-row gap-3 mb-4">
               <div className="relative flex-1">
@@ -237,13 +226,13 @@ const CreateOrder = () => {
                   placeholder="Search menu..."
                   value={menuSearch}
                   onChange={(e) => setMenuSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="input-field pl-10"
                 />
               </div>
               <select
                 value={activeCategory}
                 onChange={(e) => setActiveCategory(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="input-field"
               >
                 <option value="all">All</option>
                 {categories.map((cat) => (
@@ -262,14 +251,14 @@ const CreateOrder = () => {
                   className="text-left p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors"
                 >
                   <div className="font-medium text-gray-900 text-sm">{item.name}</div>
-                  <div className="text-blue-600 font-semibold text-sm mt-1">${item.price.toFixed(2)}</div>
+                  <div className="text-blue-600 font-semibold text-sm mt-1">Rs.{item.price.toFixed(2)}</div>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="card">
+            <label className="label">
               <span className="flex items-center gap-1"><MessageSquare size={14} /> Order Notes</span>
             </label>
             <textarea
@@ -277,20 +266,23 @@ const CreateOrder = () => {
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="Additional notes for this order..."
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-field"
             />
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sticky top-6">
+          <div className="card sticky top-6">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <ShoppingBag size={20} />
               Cart ({cart.length} items)
             </h2>
 
             {cart.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No items in cart</p>
+              <div className="text-center py-8">
+                <ShoppingBag size={40} className="mx-auto text-gray-300 mb-2" />
+                <p className="text-gray-500">No items in cart</p>
+              </div>
             ) : (
               <>
                 <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
@@ -299,7 +291,7 @@ const CreateOrder = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="font-medium text-gray-900 text-sm">{item.name}</div>
-                          <div className="text-blue-600 text-sm">${item.price.toFixed(2)}</div>
+                          <div className="text-blue-600 text-sm">Rs.{item.price.toFixed(2)}</div>
                         </div>
                         <button
                           onClick={() => removeFromCart(item._id)}
@@ -337,26 +329,26 @@ const CreateOrder = () => {
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>Rs.{subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Tax ({(TAX_RATE * 100).toFixed(0)}%)</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>Rs.{tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Service ({(SERVICE_CHARGE_RATE * 100).toFixed(0)}%)</span>
-                    <span>${serviceCharge.toFixed(2)}</span>
+                    <span>Rs.{serviceCharge.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold text-gray-900 border-t border-gray-200 pt-2">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>Rs.{total.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <button
                   onClick={handleSubmit}
                   disabled={submitting || cart.length === 0}
-                  className="w-full mt-4 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="btn-primary w-full mt-4"
                 >
                   {submitting ? 'Creating Order...' : 'Create Order'}
                 </button>

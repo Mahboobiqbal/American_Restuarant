@@ -47,8 +47,6 @@ export default function Dashboard() {
     { label: 'Monthly Orders', value: stats.monthly.orders, icon: UtensilsCrossed, color: 'text-brand-600', bg: 'bg-brand-50' },
   ];
 
-  const tableStatus = stats.tableStats || {};
-
   return (
     <div className="space-y-6">
       <div className="page-header">
@@ -100,31 +98,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Table Status */}
-        <div className="card">
-          <div className="px-5 py-4 border-b border-surface-100">
-            <h3 className="text-sm font-semibold text-surface-900">Table Status</h3>
-          </div>
-          <div className="p-5">
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { label: 'Available', key: 'available', color: 'bg-emerald-500' },
-                { label: 'Occupied', key: 'occupied', color: 'bg-red-500' },
-                { label: 'Reserved', key: 'reserved', color: 'bg-amber-500' },
-                { label: 'Maintenance', key: 'maintenance', color: 'bg-gray-400' },
-              ].map(({ label, key, color }) => (
-                <div key={key} className="flex items-center gap-3 p-3 bg-surface-50 rounded-lg">
-                  <div className={`w-3 h-3 rounded-full ${color}`} />
-                  <div>
-                    <p className="text-2xl font-bold text-surface-900">{tableStatus[key] || 0}</p>
-                    <p className="text-xs text-surface-500">{label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Order Status Breakdown */}
         <div className="card">
           <div className="px-5 py-4 border-b border-surface-100">
@@ -147,7 +120,9 @@ export default function Dashboard() {
             )}
           </div>
         </div>
+      </div>
 
+      <div className="grid grid-cols-1 gap-6">
         {/* Low Stock Alerts */}
         <div className="card">
           <div className="px-5 py-4 border-b border-surface-100 flex items-center justify-between">
