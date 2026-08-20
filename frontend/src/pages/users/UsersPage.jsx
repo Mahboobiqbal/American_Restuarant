@@ -27,7 +27,7 @@ const UsersPage = () => {
     try {
       setLoading(true);
       const response = await authAPI.getUsers();
-      setUsers(response.data);
+      setUsers(response.data.users || response.data || []);
     } catch (error) {
       toast.error('Failed to fetch users');
     } finally {
@@ -46,7 +46,7 @@ const UsersPage = () => {
         await authAPI.updateUser(editingUser._id, data);
         toast.success('User updated successfully');
       } else {
-        await authAPI.register(data);
+        await authAPI.createUser(data);
         toast.success('User created successfully');
       }
       setShowModal(false);

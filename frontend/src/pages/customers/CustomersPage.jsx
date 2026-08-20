@@ -83,7 +83,7 @@ function CustomersPage() {
 
   const handleViewCustomer = async (customerId) => {
     try {
-      const response = await customerAPI.getById(customerId);
+      const response = await customerAPI.getOne(customerId);
       setSelectedCustomer(response.data || response);
       setShowDetailModal(true);
     } catch (error) {

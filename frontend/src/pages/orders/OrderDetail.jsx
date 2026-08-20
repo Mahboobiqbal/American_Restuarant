@@ -31,7 +31,7 @@ const OrderDetail = () => {
   const fetchOrder = async () => {
     try {
       setLoading(true);
-      const data = await orderAPI.getById(id);
+      const { data } = await orderAPI.getOne(id);
       setOrder(data);
     } catch (error) {
       toast.error('Failed to load order');
@@ -44,7 +44,7 @@ const OrderDetail = () => {
   const updateStatus = async (newStatus) => {
     try {
       setUpdating(true);
-      await orderAPI.updateStatus(id, newStatus);
+      await orderAPI.updateStatus(id, { status: newStatus });
       setOrder({ ...order, status: newStatus });
       toast.success(`Order status updated to ${newStatus}`);
     } catch (error) {
@@ -58,7 +58,7 @@ const OrderDetail = () => {
     if (!confirm('Are you sure you want to cancel this order?')) return;
     try {
       setUpdating(true);
-      await orderAPI.updateStatus(id, 'cancelled');
+      await orderAPI.cancel(id);
       setOrder({ ...order, status: 'cancelled' });
       toast.success('Order cancelled');
     } catch (error) {
@@ -71,13 +71,12 @@ const OrderDetail = () => {
   const processPayment = async () => {
     try {
       setUpdating(true);
-      await paymentAPI.create({
+      await paymentAPI.process({
         orderId: id,
         amount: order.total,
         method: paymentMethod
       });
-      await orderAPI.updatePaymentStatus(id, 'paid');
-      setOrder({ ...order, paymentStatus: 'paid' });
+      setOrder({ ...order, paymentStatus: 'paid', paymentMethod });
       setShowPaymentModal(false);
       toast.success('Payment processed successfully');
     } catch (error) {

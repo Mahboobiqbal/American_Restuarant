@@ -34,8 +34,9 @@ const InventoryPage = () => {
     try {
       setLoading(true);
       const response = await inventoryAPI.getAll();
-      setItems(response.data);
-      const uniqueCategories = [...new Set(response.data.map(item => item.category))];
+      const itemsData = response.data.items || response.data || [];
+      setItems(itemsData);
+      const uniqueCategories = [...new Set(itemsData.map(item => item.category))];
       setCategories(uniqueCategories);
     } catch (error) {
       toast.error('Failed to fetch inventory items');

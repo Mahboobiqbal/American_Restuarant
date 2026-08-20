@@ -29,8 +29,8 @@ const MenuPage = () => {
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const data = await menuAPI.getAll();
-      setItems(data);
+      const { data } = await menuAPI.getAll();
+      setItems(data.items || data);
     } catch (error) {
       toast.error('Failed to load menu items');
     } finally {
@@ -40,8 +40,8 @@ const MenuPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const data = await categoryAPI.getAll();
-      setCategories(data);
+      const { data } = await categoryAPI.getAll();
+      setCategories(Array.isArray(data) ? data : []);
     } catch (error) {
       toast.error('Failed to load categories');
     }

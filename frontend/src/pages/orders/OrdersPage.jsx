@@ -20,8 +20,8 @@ const OrdersPage = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const data = await orderAPI.getAll();
-      setOrders(data);
+      const { data } = await orderAPI.getAll();
+      setOrders(data.orders || data);
     } catch (error) {
       toast.error('Failed to load orders');
     } finally {
