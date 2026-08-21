@@ -12,6 +12,7 @@ import InventoryPage from './pages/inventory/InventoryPage';
 import SuppliersPage from './pages/suppliers/SuppliersPage';
 import CustomersPage from './pages/customers/CustomersPage';
 import ReportsPage from './pages/reports/ReportsPage';
+import PaymentsPage from './pages/payments/PaymentsPage';
 import SettingsPage from './pages/settings/SettingsPage';
 import UsersPage from './pages/users/UsersPage';
 
@@ -46,6 +47,9 @@ export default function App() {
           <ProtectedRoute roles={['admin', 'manager']}><SuppliersPage /></ProtectedRoute>
         } />
         <Route path="customers" element={<CustomersPage />} />
+        <Route path="payments" element={
+          <ProtectedRoute roles={['admin', 'manager']}><PaymentsPage /></ProtectedRoute>
+        } />
         <Route path="reports" element={
           <ProtectedRoute roles={['admin', 'manager']}><ReportsPage /></ProtectedRoute>
         } />

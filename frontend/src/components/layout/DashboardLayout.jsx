@@ -7,7 +7,7 @@ import { connectSocket, disconnectSocket } from '../../utils/socket';
 import {
   LayoutDashboard, UtensilsCrossed, ShoppingCart, ChefHat,
   Package, Truck, Users, BarChart3, Settings, LogOut,
-  Bell, Menu, X, ClipboardList, UserCircle
+  Bell, Menu, X, ClipboardList, UserCircle, CreditCard
 } from 'lucide-react';
 
 const allNavItems = [
@@ -18,6 +18,7 @@ const allNavItems = [
   { path: '/inventory', label: 'Inventory', icon: Package, roles: ['admin', 'manager'] },
   { path: '/suppliers', label: 'Suppliers', icon: Truck, roles: ['admin', 'manager'] },
   { path: '/customers', label: 'Customers', icon: Users, roles: ['admin', 'manager', 'staff'] },
+  { path: '/payments', label: 'Payments', icon: CreditCard, roles: ['admin', 'manager'] },
   { path: '/reports', label: 'Reports', icon: BarChart3, roles: ['admin', 'manager'] },
   { path: '/users', label: 'Staff Management', icon: ClipboardList, roles: ['admin'] },
   { path: '/settings', label: 'Settings', icon: Settings, roles: ['admin'] },
